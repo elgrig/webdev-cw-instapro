@@ -9,7 +9,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
       ${
         imageUrl
           ? `
-          <div class="file-upload-image-conrainer">
+          <div class="file-upload-image-container">
             <img class="file-upload-image" src="${imageUrl}">
             <button class="file-upload-remove-button button">Заменить фото</button>
           </div>
@@ -31,7 +31,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
 
     const fileInputElement = element.querySelector(".file-upload-input");
 
-    fileInputElement?.addEventListener("change", () => {
+    fileInputElement.addEventListener("change", () => {
       const file = fileInputElement.files[0];
       if (file) {
         const lableEl = document.querySelector(".file-upload-label");
