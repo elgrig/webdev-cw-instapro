@@ -4,6 +4,7 @@ import { posts, goToPage, getToken, setPosts, user, page } from "../index.js";
 import { deletePost, disLike, getPosts, getUsersPosts, like } from "../api.js";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from 'date-fns/locale';
+import { sanitize } from "../helpers.js";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
@@ -16,20 +17,21 @@ export function renderPostsPageComponent({ appEl }) {
 
     const length = (post.likes.length) - 1;
     
-    let a;
+    let likeNames;
+    let name = sanitize(post.likes[0]?.name || "");
     if (post.likes.length <= 1) {
-      a = (post.likes[0]?.name);
+      likeNames = name;
     } else {
-      a = (post.likes[0]?.name) + " и ещё " +  length;
+      likeNames = name + " и ещё " +  length;
     }
 
     return `<li class="post">
     <div class="post-header" data-user-id=${post.user.id}>
         <img src=${post.user.imageUrl} class="post-header__user-image">
-        <p class="post-header__user-name">${post.user.name}
+        <p class="post-header__user-name">${sanitize(post.user.name)}
         </p>
     </div>
-    <div class="post-image-container">
+    <div class="post-image-container">     
       <img class="post-image" src=${post.imageUrl}>      
       <img src="./assets/images/Krestiksvgpng.ru_.svg" class=${(post.user.id === user?._id) ? "delete-button" : "hide"} data-id=${post.id}  width="30" height="30">
     </div>
@@ -39,12 +41,12 @@ export function renderPostsPageComponent({ appEl }) {
       </button>
       <p class="post-likes-text">
         Нравится: <strong>        
-        ${post.likes.length > 0 ? a : "0"}
+        ${post.likes.length > 0 ? likeNames : "0"}
         </strong>
       </p>
     </div>
     <p class="post-text">
-      <span class="user-name">${post.user.name}</span>
+      <span class="user-name">${sanitize(post.user.name)}</span>
       ${post.description}
     </p>
     <p class="post-date">

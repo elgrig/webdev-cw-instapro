@@ -1,3 +1,4 @@
+import { sanitize } from "../helpers.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
@@ -11,12 +12,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
           <h3 class="form-title">Добавить пост</h3>
         <div class="form-inputs">
           <div class="upload-image-container">
-            <div class="upload-image">
-              <label class="file-upload-label secondary-button">
-                <input type="file" id="image-input" class="file-upload-input" style="display: none">
-                Выберите фото
-              </label>
-            </div>
           </div>
           <label>
             Опишите фотографию: 
@@ -31,32 +26,43 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       element: document.querySelector(".header-container"),
     });
 
+    const uploadImageContainer = appEl.querySelector(".upload-image-container");
+    let imageUrl="";
+  
+    if (uploadImageContainer) {
+      renderUploadImageComponent({
+        element:appEl.querySelector(".upload-image-container"),
+        onImageUrlChange(newImageUrl) {
+          imageUrl = newImageUrl;
+        }
+      });
+    }
+
     const inputDescriptionElement = document.getElementById("input-description");  
    
     document.getElementById("add-button").addEventListener("click", () => {
-      const imageUrlElement = document.querySelector(".file-upload-image");      
+      
+      const description = inputDescriptionElement.value;
+
+      if (!imageUrl || !description.trim()) {
+        alert("Нет фото / описания");
+        return;
+      }
       onAddPostClick({
-        description: inputDescriptionElement.value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;"),
-        imageUrl: imageUrlElement.src,
+        description: sanitize(description),
+        imageUrl,
       });
     });
   };
 
   render();
-
-  const uploadImageContainer = appEl.querySelector(".upload-image-container");
-  let imageUrl="";
-
-  if (uploadImageContainer) {
-    renderUploadImageComponent({
-      element:appEl.querySelector(".upload-image-container"),
-      onImageUrlChange(newImageUrl) {
-        imageUrl = newImageUrl;
-      }
-    });
-  }
 }
+
+
+
+{/* <div class="upload-image">
+<label class="file-upload-label secondary-button">
+  <input type="file" id="image-input" class="file-upload-input" style="display: none">
+  Выберите фото
+</label>
+</div> */}
