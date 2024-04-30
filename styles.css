@@ -196,3 +196,14 @@
   width: 100%;
   text-align: center;
 }
+
+.hide {
+  display: none;
+}
+
+.delete-button {
+  display: block;
+  position: absolute;
+  right: 0;
+
+}
